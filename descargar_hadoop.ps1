@@ -1,26 +1,34 @@
 
 $ErrorActionPreference = "Stop"
 
-$version = "3.3.6"
-$carpeta = Join-Path $PSScriptRoot "hadoop"
-$archivo = Join-Path $carpeta "hadoop-$version.tar.gz"
-
-$url = "https://archive.apache.org/dist/hadoop/common/hadoop-$version/hadoop-$version.tar.gz"
+$carpeta = Join-Path $PSScriptRoot "ssh"
+$llave = Join-Path $carpeta "id_ed25519"
+$publica = "$llave.pub"
 
 if (!(Test-Path $carpeta)) {
     New-Item -ItemType Directory -Path $carpeta | Out-Null
 }
 
-if (Test-Path $archivo) {
-    Write-Host "Hadoop ya esta descargado."
+if (!(Test-Path $llave)) {
+    Write-Host "Generando llaves SSH..."
+
+    ssh-keygen -t ed25519 -N '""' -f $llave
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "No se pudieron generar las llaves SSH."
+    }
 }
-else {
-    Write-Host "Descargando Hadoop $version..."
 
-    Invoke-WebRequest -Uri $url -OutFile $archivo
+if (!(Test-Path $publica)) {
+    Write-Host "Recuperando llave publica..."
 
-    Write-Host "Descarga completada."
+    ssh-keygen -y -f $llave | Out-File `
+        -FilePath $publica `
+        -Encoding ascii
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "No se pudo generar la llave publica."
+    }
 }
 
-Write-Host "Preparacion de Hadoop finalizada."
-s
+Write-Host "Llaves SSH listas."
