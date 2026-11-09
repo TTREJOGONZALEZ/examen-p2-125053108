@@ -1,0 +1,35 @@
+# Dataset de ventas
+*.csv
+
+# Credenciales y variables de entorno
+.env
+.env.*
+
+# Permitir el archivo de ejemplo
+!.env.example
+
+# Entornos virtuales de Python
+.venv/
+venv/
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+
+# Resultados generados por Hadoop
+data/output/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.log
+# Archivos comprimidos de Hadoop
+hadoop/*.tar.gz
+
+# Resultados generados
+resultados/
+
+# Llaves privadas y configuracion SSH local
+ssh/
